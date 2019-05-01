@@ -1,8 +1,8 @@
 name: sqlite_rank
 description: A dart implementation of the rank function for SQLite FTS4 described here https://www.sqlite.org/fts3.html#appendix_a 
 version: 0.0.1
-author:
-homepage:
+author: "Fructika <fructikapp@gmail.com>"
+homepage: https://github.com/adam7/sqlite_rank
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
