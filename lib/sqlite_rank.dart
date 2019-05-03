@@ -2,10 +2,10 @@ library sqlite_rank;
 
 /// Method to use with SQLite matchinfo() and FTS3/4 to calculate the
 /// relevancy of an FTS match. Returns the relevancy score
-/// (a real value greater than or equal to zero). A larger value indicates 
+/// (a real value greater than or equal to zero). A larger value indicates
 /// a more relevant document.
 ///
-/// The overall relevancy returned is the sum of the relevancies of each 
+/// The overall relevancy returned is the sum of the relevancies of each
 /// column value in the FTS table. The relevancy of a column value is the
 /// sum of the following for each reportable phrase in the FTS query:
 ///
@@ -17,9 +17,9 @@ library sqlite_rank;
 /// table. The <column weight> is a weighting factor assigned to each
 /// column by the caller (see below).
 ///
-/// The [matchinfo] must be the return value of the FTS matchinfo() function, 
-/// [columnWeights] must be a list of weights for each column of the FTS table 
-Future<double> rank(String matchinfo, List<double> columnWeights) async {
+/// The [matchinfo] must be the return value of the FTS matchinfo() function,
+/// [columnWeights] must be a list of weights for each column of the FTS table
+double rank(String matchinfo, List<double> columnWeights) {
   return _rankFromArray(matchinfoToArray(matchinfo), columnWeights);
 }
 
@@ -31,8 +31,7 @@ List<int> matchinfoToArray(String matchinfo) {
   return map.toList();
 }
 
-Future<double> _rankFromArray(
-    List<int> matchinfo, List<double> columnWeights) async {
+double _rankFromArray(List<int> matchinfo, List<double> columnWeights) {
   int columnCount = 0; /* Number of columns in the table */
   int phraseCount = 0; /* Number of phrases in the query */
   double score = 0.0; /* Value to return */
