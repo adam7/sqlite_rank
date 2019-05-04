@@ -17,9 +17,9 @@ library sqlite_rank;
 /// table. The <column weight> is a weighting factor assigned to each
 /// column by the caller (see below).
 ///
-/// The [matchinfo] must be the return value of the FTS matchinfo() function,
+/// The [matchinfo] must be the return value of the FTS matchinfo() function, 
 /// [columnWeights] must be a list of weights for each column of the FTS table
-double rank(String matchinfo, List<double> columnWeights) {
+double rank(String matchinfo, [List<double> columnWeights]) {
   return _rankFromArray(matchinfoToArray(matchinfo), columnWeights);
 }
 
@@ -31,22 +31,29 @@ List<int> matchinfoToArray(String matchinfo) {
   return map.toList();
 }
 
-double _rankFromArray(List<int> matchinfo, List<double> columnWeights) {
-  int columnCount = 0; /* Number of columns in the table */
-  int phraseCount = 0; /* Number of phrases in the query */
-  double score = 0.0; /* Value to return */
+double _rankFromArray(List<int> matchinfo, [List<double> columnWeights]) {
+  int columnCount = 0; // Number of columns in the table 
+  int phraseCount = 0; // Number of phrases in the query 
+  double rank = 0.0; 
 
-  /// Check that the number of arguments passed to this function is correct.
+  // Check that the number of arguments passed to this function is correct.
   if (matchinfo.length >= 2) {
     phraseCount = matchinfo[0];
     columnCount = matchinfo[1];
+  } else {
+    throw ArgumentError("matchinfo length is less than 2, that's not right");
   }
 
-  if (matchinfo.length != (2 + (3 * columnCount * phraseCount))) {
-    throw ArgumentError("invalid matchinfo length");
-  }
+  // If there are no column weights specified then treat them all as equal
+  columnWeights = columnWeights ?? List.filled(columnCount, 1);
+
+  var expectedMatchinfoLength = (2 + (3 * columnCount * phraseCount));
+
+  if (matchinfo.length != expectedMatchinfoLength) 
+    throw ArgumentError("matchinfo length should be $expectedMatchinfoLength but it's ${matchinfo.length}");
+
   if (columnWeights.length != columnCount)
-    throw ArgumentError("invalid columnWeights length");
+    throw ArgumentError("columnWeights length should be $columnCount but it's ${columnWeights.length}");
 
   /// Iterate through each phrase in the users query.
   for (int phraseIndex = 0; phraseIndex < phraseCount; phraseIndex++) {
@@ -59,11 +66,12 @@ double _rankFromArray(List<int> matchinfo, List<double> columnWeights) {
       int hitCount = matchinfo[phraseLocation + (3 * columnIndex)];
       int globalHitCount = matchinfo[phraseLocation + (3 * columnIndex + 1)];
       double weight = columnWeights[columnIndex];
+
       if (hitCount > 0) {
-        score += (hitCount / globalHitCount) * weight;
+        rank += (hitCount / globalHitCount) * weight;
       }
     }
   }
 
-  return double.parse(score.toStringAsFixed(2));
+  return double.parse(rank.toStringAsFixed(2));
 }
