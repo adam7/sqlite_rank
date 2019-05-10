@@ -5,6 +5,8 @@ import 'package:sqlite_rank/sqlite_rank.dart';
 void main() {
   final invalidLengthMatchinfo = _buildUint8bitList([1, 2, 1, 1, 1]);
 
+  final lengthLessThanTwoMatchinfo = _buildUint8bitList([1]);
+
   final oneColumnOnePhraseMatchinfo =
       _buildUint8bitList([1, 1, 1, 1, 1]);
 
@@ -14,6 +16,10 @@ void main() {
   group("When calling rank", () {
     test('with empty matchinfo it should throw an argument error', () {
       expect(() => rank(Uint8List(0)), throwsArgumentError);
+    });
+
+    test('with matchinfo length less than two it should throw an argument error', () {
+      expect(() => rank(lengthLessThanTwoMatchinfo), throwsArgumentError);
     });
 
     test('with invalid length matchinfo it should throw an argument error', () {
