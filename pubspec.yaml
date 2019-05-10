@@ -5,7 +5,7 @@ author: "Fructika <fructikapp@gmail.com>"
 homepage: https://github.com/adam7/sqlite_rank
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
