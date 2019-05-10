@@ -11,9 +11,9 @@ List<int> toUint32List(Uint8List matchinfo) {
     throw ArgumentError("matchinfo length should be divisible by four but it is ${matchinfo.length}");
   }
 
-  var uint32ListLength = matchinfo.length ~/ 4;
+  final uint32ListLength = matchinfo.length ~/ 4;
   var uint32List = Uint32List(uint32ListLength);
-  var data = ByteData.view(
+  final data = ByteData.view(
       matchinfo.buffer, matchinfo.offsetInBytes, matchinfo.length);
 
   for (int i = 0; i < uint32ListLength; i++) {
